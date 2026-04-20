@@ -5,6 +5,7 @@ interface Ingredient {
   id: string;
   name: string;
   weight: number;
+  icon?: string;
 }
 
 interface RecipeDetailProps {
@@ -25,7 +26,7 @@ export default function RecipeDetail({
 
   const handleIngredientChange = (
     id: string,
-    field: "name" | "weight",
+    field: "name" | "weight" | "icon",
     value: string | number,
   ) => {
     setEditableIngredients(
@@ -105,6 +106,20 @@ export default function RecipeDetail({
               >
                 <div className="space-y-3">
                   <div className="flex items-center gap-2">
+                    <input
+                      type="text"
+                      value={ingredient.icon || ""}
+                      onChange={(e) =>
+                        handleIngredientChange(
+                          ingredient.id,
+                          "icon",
+                          e.target.value,
+                        )
+                      }
+                      className="w-12 h-11 px-2 bg-input-background border border-border rounded-lg text-center focus:outline-none focus:ring-2 focus:ring-accent/50"
+                      placeholder="emoji"
+                      maxLength={2}
+                    />
                     <input
                       type="text"
                       value={ingredient.name}

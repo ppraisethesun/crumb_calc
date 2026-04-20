@@ -5,6 +5,7 @@ interface Ingredient {
   id: string;
   name: string;
   weight: number;
+  icon?: string;
 }
 
 interface IngredientRowProps {
@@ -45,6 +46,7 @@ export default function IngredientRow({ ingredient, isDriver, onWeightChange, is
       <div className="flex items-center justify-between gap-4">
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2">
+            {ingredient.icon && <span className="text-lg">{ingredient.icon}</span>}
             <h3 className="truncate">{ingredient.name}</h3>
             {isDriver && (
               <span className="text-xs bg-accent text-accent-foreground px-2 py-0.5 rounded-full whitespace-nowrap">

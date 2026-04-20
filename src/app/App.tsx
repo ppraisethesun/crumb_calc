@@ -10,6 +10,7 @@ interface Ingredient {
   id: string;
   name: string;
   weight: number;
+  icon?: string;
 }
 
 interface Recipe {
@@ -25,22 +26,23 @@ const defaultRecipes: Recipe[] = [
     id: "1",
     name: "Sourdough",
     ingredients: [
-      { id: "1", name: "Bread Flour", weight: 500 },
-      { id: "2", name: "Water", weight: 325 },
-      { id: "3", name: "Starter", weight: 100 },
-      { id: "4", name: "Salt", weight: 2 },
+      { id: "1", name: "Bread Flour", weight: 400, icon: "🌾" },
+      { id: "2", name: "Whole Wheat Flour", weight: 100, icon: "🌿" },
+      { id: "3", name: "Water", weight: 325, icon: "💧" },
+      { id: "4", name: "Starter", weight: 100, icon: "🫧" },
+      { id: "5", name: "Salt", weight: 2, icon: "🧂" },
     ],
   },
   {
     id: "2",
     name: "Focaccia",
     ingredients: [
-      { id: "1", name: "White Flour", weight: 235 },
-      { id: "2", name: "Whole Wheat Flour", weight: 20 },
-      { id: "3", name: "Water", weight: 195 },
-      { id: "4", name: "Starter", weight: 90 },
-      { id: "5", name: "Salt", weight: 9 },
-      { id: "6", name: "Olive Oil", weight: 11 },
+      { id: "1", name: "White Flour", weight: 235, icon: "🌾" },
+      { id: "2", name: "Whole Wheat Flour", weight: 20, icon: "🌿" },
+      { id: "3", name: "Water", weight: 195, icon: "💧" },
+      { id: "4", name: "Starter", weight: 90, icon: "🫧" },
+      { id: "5", name: "Salt", weight: 9, icon: "🧂" },
+      { id: "6", name: "Olive Oil", weight: 11, icon: "🫒" },
     ],
   },
 ];
@@ -97,7 +99,9 @@ export default function App() {
     const updatedBaseIngredients = baseIngredients.map((ing) => {
       const scaledWeight = ing.weight * loafCount;
       const newScaledWeight =
-        ing.id === id ? newWeight : parseFloat((scaledWeight * ratio).toFixed(1));
+        ing.id === id
+          ? newWeight
+          : parseFloat((scaledWeight * ratio).toFixed(1));
       return {
         ...ing,
         weight: parseFloat((newScaledWeight / loafCount).toFixed(1)),
@@ -226,7 +230,9 @@ export default function App() {
               type="number"
               min="1"
               value={loafCount}
-              onChange={(e) => setLoafCount(Math.max(1, parseInt(e.target.value) || 1))}
+              onChange={(e) =>
+                setLoafCount(Math.max(1, parseInt(e.target.value) || 1))
+              }
               className="w-12 h-8 text-center bg-card border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-accent/50"
             />
             <button
