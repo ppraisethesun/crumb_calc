@@ -92,9 +92,11 @@ export default function App() {
   const handleIngredientWeightChange = (id: string, newWeight: number) => {
     setDriverIngredientId(id);
     const driverIngredient = ingredients.find((ing) => ing.id === id);
-    if (!driverIngredient || driverIngredient.weight === 0) return;
+    if (!driverIngredient) return;
 
-    const ratio = newWeight / driverIngredient.weight;
+    // When current weight is 0, we can't calculate ratio, so use 1
+    // This keeps other ingredients unchanged while updating only the driver
+    const ratio = driverIngredient.weight === 0 ? 1 : newWeight / driverIngredient.weight;
 
     const updatedBaseIngredients = baseIngredients.map((ing) => {
       const scaledWeight = ing.weight * loafCount;
