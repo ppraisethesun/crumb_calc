@@ -197,7 +197,7 @@ export default function App() {
     return (
       <RecipeDetail
         recipeName={currentRecipe?.name || ""}
-        ingredients={ingredients}
+        ingredients={baseIngredients}
         onBack={() => setScreen("calculator")}
         onUpdateRecipe={handleUpdateRecipe}
       />
