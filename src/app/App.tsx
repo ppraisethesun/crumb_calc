@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Wheat, Settings } from "lucide-react";
+import { Wheat, Settings, RotateCcw } from "lucide-react";
 import IngredientRow from "./components/IngredientRow";
 import TotalBar from "./components/TotalBar";
 import RecipeDetail from "./components/RecipeDetail";
@@ -29,7 +29,7 @@ const defaultRecipes: Recipe[] = [
       { id: "1", name: "Bread Flour", weight: 400, icon: "🌾" },
       { id: "2", name: "Whole Wheat Flour", weight: 100, icon: "🌿" },
       { id: "3", name: "Water", weight: 325, icon: "💧" },
-      { id: "4", name: "Starter", weight: 100, icon: "🫧" },
+      { id: "4", name: "Starter", weight: 125, icon: "🫧" },
       { id: "5", name: "Salt", weight: 2, icon: "🧂" },
     ],
   },
@@ -94,20 +94,25 @@ export default function App() {
     const driverIngredient = ingredients.find((ing) => ing.id === id);
     if (!driverIngredient) return;
 
-    // When current weight is 0, we can't calculate ratio, so use 1
-    // This keeps other ingredients unchanged while updating only the driver
-    const ratio =
-      driverIngredient.weight === 0 ? 1 : newWeight / driverIngredient.weight;
+    // Get original recipe proportions for ratio calculation
+    const originalRecipe = defaultRecipes.find((r) => r.id === currentRecipeId);
+    const originalIngredient = originalRecipe?.ingredients.find(
+      (ing) => ing.id === id,
+    );
+    const originalWeight = originalIngredient?.weight || 1;
+
+    // Use original recipe proportions for ratio, not current (possibly 0) values
+    const ratio = newWeight / originalWeight;
 
     const updatedBaseIngredients = baseIngredients.map((ing) => {
-      const scaledWeight = ing.weight * loafCount;
-      const newScaledWeight =
-        ing.id === id
-          ? newWeight
-          : parseFloat((scaledWeight * ratio).toFixed(1));
+      const originalIng = originalRecipe?.ingredients.find(
+        (oi) => oi.id === ing.id,
+      );
+      const originalIngWeight = originalIng?.weight || 0;
+      const newBaseWeight = parseFloat((originalIngWeight * ratio).toFixed(1));
       return {
         ...ing,
-        weight: parseFloat((newScaledWeight / loafCount).toFixed(1)),
+        weight: newBaseWeight,
       };
     });
 
@@ -166,6 +171,22 @@ export default function App() {
     setScreen("detail");
   };
 
+  const handleReset = () => {
+    setLoafCount(1);
+    setDriverIngredientId(null);
+    // Reset current recipe to its default state
+    const defaultRecipe = defaultRecipes.find((r) => r.id === currentRecipeId);
+    if (defaultRecipe) {
+      setRecipes(
+        recipes.map((r) =>
+          r.id === currentRecipeId
+            ? { ...r, ingredients: [...defaultRecipe.ingredients] }
+            : r,
+        ),
+      );
+    }
+  };
+
   const hydration = Math.round(
     ((ingredients.find((ing) => ing.name === "Water")?.weight || 0) /
       flourWeight) *
@@ -202,12 +223,21 @@ export default function App() {
           <Wheat className="w-6 h-6 text-accent" strokeWidth={2} />
           <h1 className="font-serif">Crumb Calculator</h1>
         </div>
-        <button
-          onClick={() => setScreen("management")}
-          className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-muted transition-colors"
-        >
-          <Settings className="w-5 h-5 text-primary" strokeWidth={2} />
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={handleReset}
+            title="Reset to 1 loaf"
+            className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-muted transition-colors"
+          >
+            <RotateCcw className="w-5 h-5 text-primary" strokeWidth={2} />
+          </button>
+          <button
+            onClick={() => setScreen("management")}
+            className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-muted transition-colors"
+          >
+            <Settings className="w-5 h-5 text-primary" strokeWidth={2} />
+          </button>
+        </div>
       </header>
 
       <div className="px-4 mb-6">
