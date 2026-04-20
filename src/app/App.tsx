@@ -47,6 +47,15 @@ const defaultRecipes: Recipe[] = [
   },
 ];
 
+/** 1-loaf template weights for scaling: built-ins use defaults; custom recipes use stored bases. */
+function ratioTemplateRows(
+  recipeId: string,
+  storedIngredients: Ingredient[],
+): Ingredient[] {
+  const fromDefaults = defaultRecipes.find((r) => r.id === recipeId);
+  return fromDefaults ? fromDefaults.ingredients : storedIngredients;
+}
+
 export default function App() {
   const [screen, setScreen] = useState<Screen>("calculator");
   const [recipes, setRecipes] = useState<Recipe[]>([]);
@@ -91,21 +100,71 @@ export default function App() {
 
   const handleIngredientWeightChange = (id: string, newWeight: number) => {
     setDriverIngredientId(id);
-    const driverIngredient = ingredients.find((ing) => ing.id === id);
-    if (!driverIngredient) return;
+    if (!ingredients.some((ing) => ing.id === id)) return;
 
     // newWeight is total grams for this ingredient at the current loaf count.
-    // Compare to the previous displayed (scaled) weight so scaling matches the UI.
-    const oldScaledDriver = driverIngredient.weight;
-    const safeDenom = oldScaledDriver > 0 ? oldScaledDriver : 1;
-    const ratio = newWeight / safeDenom;
+    const newDriverBase = newWeight / loafCount;
 
-    const updatedBaseIngredients = baseIngredients.map((ing) => ({
-      ...ing,
-      weight: parseFloat((ing.weight * ratio).toFixed(1)),
-    }));
+    if (newWeight <= 0) {
+      updateCurrentRecipeIngredients(
+        baseIngredients.map((ing) => ({ ...ing, weight: 0 })),
+      );
+      return;
+    }
 
-    updateCurrentRecipeIngredients(updatedBaseIngredients);
+    const templateRows = ratioTemplateRows(currentRecipeId, baseIngredients);
+    const driverIdx = baseIngredients.findIndex((ing) => ing.id === id);
+    const tmplDriver =
+      templateRows.find((t) => t.id === id) ??
+      (driverIdx >= 0 ? templateRows[driverIdx] : undefined);
+    let tmplDriverW = tmplDriver?.weight ?? 0;
+
+    const fallbackTemplate =
+      defaultRecipes.find((r) => r.id === currentRecipeId) ?? defaultRecipes[0];
+
+    if (tmplDriverW <= 0) {
+      if (!fallbackTemplate) {
+        updateCurrentRecipeIngredients(
+          baseIngredients.map((ing) =>
+            ing.id === id
+              ? { ...ing, weight: parseFloat(newDriverBase.toFixed(1)) }
+              : ing,
+          ),
+        );
+        return;
+      }
+      const fbDriver =
+        fallbackTemplate.ingredients.find((t) => t.id === id) ??
+        fallbackTemplate.ingredients[Math.max(0, driverIdx)];
+      tmplDriverW = fbDriver?.weight ?? 1;
+      const scale = newDriverBase / (tmplDriverW > 0 ? tmplDriverW : 1);
+      updateCurrentRecipeIngredients(
+        baseIngredients.map((ing, idx) => {
+          const tmpl =
+            fallbackTemplate.ingredients.find((t) => t.id === ing.id) ??
+            fallbackTemplate.ingredients[idx];
+          const tw = tmpl?.weight ?? 0;
+          return {
+            ...ing,
+            weight: parseFloat((tw * scale).toFixed(1)),
+          };
+        }),
+      );
+      return;
+    }
+
+    const scale = newDriverBase / tmplDriverW;
+    updateCurrentRecipeIngredients(
+      baseIngredients.map((ing, idx) => {
+        const tmpl =
+          templateRows.find((t) => t.id === ing.id) ?? templateRows[idx];
+        const tw = tmpl?.weight ?? 0;
+        return {
+          ...ing,
+          weight: parseFloat((tw * scale).toFixed(1)),
+        };
+      }),
+    );
   };
 
   const updateCurrentRecipeIngredients = (updatedIngredients: Ingredient[]) => {
