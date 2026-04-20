@@ -1,16 +1,67 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Crumb Calculator - Sourdough Recipe Scaler</title>
+    <meta
+      name="description"
+      content="Free sourdough bread recipe calculator. Scale ingredients, adjust hydration, and calculate baker's percentages for perfect bread every time."
+    />
 
-  <!DOCTYPE html>
-  <html lang="en">
-    <head>
-      <meta charset="UTF-8" />
-      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <title>Sourdough Recipe Scaler</title>
-      <style>html, body { height: 100%; margin: 0; } #root { height: 100%; }</style>
-    </head>
+    <!-- Open Graph -->
+    <meta
+      property="og:title"
+      content="Crumb Calculator - Sourdough Recipe Scaler"
+    />
+    <meta
+      property="og:description"
+      content="Free sourdough bread recipe calculator. Scale ingredients, adjust hydration, and calculate baker's percentages for perfect bread every time."
+    />
+    <meta property="og:type" content="website" />
 
-    <body>
-      <div id="root"></div>
-      <script type="module" src="/src/main.tsx"></script>
-    </body>
-  </html>
-  
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary" />
+    <meta
+      name="twitter:title"
+      content="Crumb Calculator - Sourdough Recipe Scaler"
+    />
+    <meta
+      name="twitter:description"
+      content="Free sourdough bread recipe calculator. Scale ingredients, adjust hydration, and calculate baker's percentages."
+    />
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Crumb Calculator",
+        "description": "Free sourdough bread recipe calculator. Scale ingredients, adjust hydration, and calculate baker's percentages.",
+        "applicationCategory": "UtilityApplication",
+        "operatingSystem": "Web",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        }
+      }
+    </script>
+
+    <style>
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+      }
+      #root {
+        height: 100%;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
