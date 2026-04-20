@@ -94,27 +94,16 @@ export default function App() {
     const driverIngredient = ingredients.find((ing) => ing.id === id);
     if (!driverIngredient) return;
 
-    // Get original recipe proportions for ratio calculation
-    const originalRecipe = defaultRecipes.find((r) => r.id === currentRecipeId);
-    const originalIngredient = originalRecipe?.ingredients.find(
-      (ing) => ing.id === id,
-    );
-    const originalWeight = originalIngredient?.weight || 1;
+    // newWeight is total grams for this ingredient at the current loaf count.
+    // Compare to the previous displayed (scaled) weight so scaling matches the UI.
+    const oldScaledDriver = driverIngredient.weight;
+    const safeDenom = oldScaledDriver > 0 ? oldScaledDriver : 1;
+    const ratio = newWeight / safeDenom;
 
-    // Use original recipe proportions for ratio, not current (possibly 0) values
-    const ratio = newWeight / originalWeight;
-
-    const updatedBaseIngredients = baseIngredients.map((ing) => {
-      const originalIng = originalRecipe?.ingredients.find(
-        (oi) => oi.id === ing.id,
-      );
-      const originalIngWeight = originalIng?.weight || 0;
-      const newBaseWeight = parseFloat((originalIngWeight * ratio).toFixed(1));
-      return {
-        ...ing,
-        weight: newBaseWeight,
-      };
-    });
+    const updatedBaseIngredients = baseIngredients.map((ing) => ({
+      ...ing,
+      weight: parseFloat((ing.weight * ratio).toFixed(1)),
+    }));
 
     updateCurrentRecipeIngredients(updatedBaseIngredients);
   };
