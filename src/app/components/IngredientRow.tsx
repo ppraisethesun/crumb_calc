@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { ChevronRight } from 'lucide-react';
 
 interface Ingredient {
   id: string;
@@ -70,7 +69,6 @@ export default function IngredientRow({ ingredient, isDriver, onWeightChange, is
             />
             <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground pointer-events-none">g</span>
           </div>
-          <ChevronRight className="w-4 h-4 text-muted-foreground/30" />
         </div>
       </div>
     </div>
