@@ -1,10 +1,11 @@
-import { Calculator } from 'lucide-react';
+import { Calculator } from "lucide-react";
 
 interface TotalBarProps {
   totalWeight: number;
+  hydration: number;
 }
 
-export default function TotalBar({ totalWeight }: TotalBarProps) {
+export default function TotalBar({ totalWeight, hydration }: TotalBarProps) {
   return (
     <div className="fixed bottom-0 left-0 right-0 bg-card border-t-2 border-accent/30 shadow-2xl px-4 py-5">
       <div className="flex items-center justify-between max-w-md mx-auto">
@@ -14,12 +15,10 @@ export default function TotalBar({ totalWeight }: TotalBarProps) {
           </div>
           <div>
             <p className="text-xs text-muted-foreground">Total Dough Weight</p>
-            <p className="font-medium text-primary">{totalWeight.toFixed(1)}g</p>
+            <p className="font-medium text-primary">
+              {totalWeight.toFixed(1)}g
+            </p>
           </div>
-        </div>
-        <div className="text-right">
-          <p className="text-xs text-muted-foreground">Flour Ratio</p>
-          <p className="font-medium text-primary">100%</p>
         </div>
       </div>
     </div>

@@ -4,7 +4,6 @@ import { ChevronRight } from 'lucide-react';
 interface Ingredient {
   id: string;
   name: string;
-  percentage: number;
   weight: number;
 }
 
@@ -53,7 +52,6 @@ export default function IngredientRow({ ingredient, isDriver, onWeightChange, is
               </span>
             )}
           </div>
-          <p className="text-sm text-muted-foreground">{ingredient.percentage}%</p>
         </div>
 
         <div className="flex items-center gap-2">
