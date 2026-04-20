@@ -30,7 +30,7 @@ const defaultRecipes: Recipe[] = [
       { id: "2", name: "Whole Wheat Flour", weight: 100, icon: "🌿" },
       { id: "3", name: "Water", weight: 325, icon: "💧" },
       { id: "4", name: "Starter", weight: 125, icon: "🫧" },
-      { id: "5", name: "Salt", weight: 2, icon: "🧂" },
+      { id: "5", name: "Salt", weight: 10, icon: "🧂" },
     ],
   },
   {
