@@ -37,7 +37,7 @@ const defaultRecipes: Recipe[] = [
     id: "2",
     name: "Focaccia",
     ingredients: [
-      { id: "1", name: "White Flour", weight: 235, icon: "🌾" },
+      { id: "1", name: "White Flour", weight: 255, icon: "🌾" },
       { id: "2", name: "Whole Wheat Flour", weight: 20, icon: "🌿" },
       { id: "3", name: "Water", weight: 195, icon: "💧" },
       { id: "4", name: "Starter", weight: 90, icon: "🫧" },
